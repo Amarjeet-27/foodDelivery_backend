@@ -3,18 +3,20 @@ package com.project.foodDelivery.security;
 import com.project.foodDelivery.model.Role;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Component;
-
+import org.springframework.beans.factory.annotation.Value;
 import java.security.Key;
 import java.util.Date;
 
 @Component
 public class JwtUtils {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512); // generates HS512 key
+    private final Key key;
 
+    public JwtUtils(@Value("${jwt.secret}") String secret) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
+    }
 
     public String generateJwtToken(String email, Role role) {
         long jwtExpirationMs = 86400000; // 1 day
