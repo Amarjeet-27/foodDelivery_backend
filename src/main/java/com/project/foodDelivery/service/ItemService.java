@@ -21,9 +21,12 @@ public class ItemService {
         this.itemRepo = itemRepo;
         this.userRepo= userRepo;
     }
-
     public List<Item> getAllItems() {
         return itemRepo.findAll();
+    }
+
+    public List<Item> getAllItemsByUser(String email) {
+        return itemRepo.findByUser_Email(email);
     }
 
     public Optional<Item>getItemById(Long id) {

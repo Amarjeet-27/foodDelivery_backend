@@ -3,6 +3,8 @@ package com.project.foodDelivery.controller;
 import com.project.foodDelivery.model.Item;
 import com.project.foodDelivery.service.ItemService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -19,9 +21,17 @@ public class ItemController {
     }
 
     @GetMapping
+    public List<Item> getAllItemsByOwner() {
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email = auth.getName();
+        return itemService.getAllItemsByUser(email);
+    }
+
+    @GetMapping("/customer")
     public List<Item> getAllItems() {
         return itemService.getAllItems();
     }
+
 
     @GetMapping("/{id}")
     public ResponseEntity<Item> getItemById(@PathVariable Long id) {

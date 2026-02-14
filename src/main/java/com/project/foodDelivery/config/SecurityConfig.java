@@ -3,6 +3,7 @@ package com.project.foodDelivery.config;
 import com.project.foodDelivery.security.JwtAuthFilter;
 import com.project.foodDelivery.security.JwtUtils;
 import com.project.foodDelivery.security.UserDetailsServiceImpl;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -56,10 +57,13 @@ public class SecurityConfig {
     }
 
     // Define CORS configuration source
+    @Value("${frontend.url}")
+    private String frontendUrl;
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
+
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:5173")); // frontend origin
+        config.setAllowedOrigins(List.of(frontendUrl)); // frontend origin
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);

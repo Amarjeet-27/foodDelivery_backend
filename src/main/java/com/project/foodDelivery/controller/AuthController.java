@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -21,6 +22,7 @@ public class AuthController {
     public AuthController(UserService userService) {
         this.userService = userService;
     }
+    private User user1;
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@RequestBody RegisterRequest req){
@@ -38,8 +40,13 @@ public class AuthController {
         System.out.println("Login attempt for user: " + username);
         System.out.println("Password provided: " + (password != null ? "****" : "null")); // Mask password in logs
         try {
+            Optional<User> user = userService.getUserByEmail(username);
             String token = userService.loginUser(username, password);
-            return ResponseEntity.ok(Map.of("username", username, "token", token));
+            String name="USER";
+            if(user.isPresent()){
+                name=user.get().getName();
+            }
+            return ResponseEntity.ok(Map.of("username", username, "token", token,"name",name));
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", e.getMessage()));
